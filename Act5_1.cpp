@@ -2,30 +2,30 @@
 #include<iostream>
 using namespace std;
 
-unsigned long long CharToInt(char entrada)
+unsigned long long Entrada(char entrada)
 {
 	unsigned long long Salida;
 	Salida = entrada;
 	return Salida;
 }
-unsigned long long ObtenerNumero(string entrada, string entradaM, string entradaMo, int entradaYear)
+unsigned long long ins(string entrada, string entradaM, string entradaMo, int entradaYear)
 {
 	unsigned long long Salida=0;
 	for(int i=0;entrada[i] != '\0';i++)
 	{
 		if(entrada[1+i] == '\0' && i==0)
-			Salida+=CharToInt(entrada[i]);
+			Salida+=Entrada(entrada[i]);
 		else
 		{
 			if(i==0)
 			{
-				Salida += CharToInt(entrada[i]);
+				Salida += Entrada(entrada[i]);
 				continue;
 			}
 			else
 			{
 				
-				int miChar = CharToInt(entrada[i]);
+				int miChar = Entrada(entrada[i]);
 				if(miChar>99)
 				{
 					Salida*=1000;
@@ -46,7 +46,7 @@ unsigned long long ObtenerNumero(string entrada, string entradaM, string entrada
 
 int  FuncHash(string entrada, string entradaM,string entradaMo,int entradaYear)
 {
-	unsigned long long Amodular = ObtenerNumero(entrada, entradaM, entradaMo, entradaYear);
+	unsigned long long Amodular = ins(entrada, entradaM, entradaMo, entradaYear);
 	int Salida = Amodular%HashMod;
 	return Salida;
 }

@@ -8,7 +8,7 @@ unsigned long long Entrada(char entrada)
 	Salida = entrada;
 	return Salida;
 }
-unsigned long long ins(string entrada, string entradaM, string entradaMo, int entradaYear)
+unsigned long long Numero(string entrada, string entradaM, string entradaMo, int entradaYear)
 {
 	unsigned long long Salida=0;
 	for(int i=0;entrada[i] != '\0';i++)
@@ -44,9 +44,9 @@ unsigned long long ins(string entrada, string entradaM, string entradaMo, int en
 	return Salida;
 }
 
-int  FuncHash(string entrada, string entradaM,string entradaMo,int entradaYear)
+int  ins(string entrada, string entradaM,string entradaMo,int entradaYear)
 {
-	unsigned long long Amodular = ins(entrada, entradaM, entradaMo, entradaYear);
+	unsigned long long Amodular = Numero(entrada, entradaM, entradaMo, entradaYear);
 	int Salida = Amodular%HashMod;
 	return Salida;
 }
@@ -77,7 +77,7 @@ main()
 
 			cout<<"ingrese su Placa: ";
 			cin>>Placa>>Marca>>Modelo>>year;
-			int Pos = FuncHash(Placa, Marca, Modelo, year);
+			int Pos = ins(Placa, Marca, Modelo, year);
 			cout<<"\nValor hash: "<<Pos<<" "<<Placa<<" "<<Marca<<" "<<Modelo<<" "<<year;
 			if(Tabla[Pos]=="null" || Tabla[Pos]==Placa, Marca, Modelo, year)
 				Tabla[Pos]=Placa, Marca, Modelo, year;

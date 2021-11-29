@@ -1,108 +1,176 @@
-#define HashMod 97
-#include<iostream>
+#include <string>
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <list>
+#include <stack>
+#include <map>
+#include <fstream>
+#include <cstdlib>
+#include <sstream>
+#include <stdlib.h>
+
 using namespace std;
 
-unsigned long long Entrada(char entrada)
-{
-	unsigned long long Salida;
-	Salida = entrada;
-	return Salida;
-}
-unsigned long long Numero(string entrada, string entradaM, string entradaMo, int entradaYear)
-{
-	unsigned long long Salida=0;
-	for(int i=0;entrada[i] != '\0';i++)
-	{
-		if(entrada[1+i] == '\0' && i==0)
-			Salida+=Entrada(entrada[i]);
-		else
-		{
-			if(i==0)
-			{
-				Salida += Entrada(entrada[i]);
-				continue;
-			}
-			else
-			{
-				
-				int miChar = Entrada(entrada[i]);
-				if(miChar>99)
-				{
-					Salida*=1000;
-				}
-				else if(miChar>9)
-				{
-					Salida*=100;
-				}
-				
-				Salida += miChar;
-			}
-				
-			
-		}
-	}
-	return Salida;
-}
+int Hashing(string placa){
+    int key=0;
+    for (int i = 0; i < placa.length(); i++){
+        key = key + placa[i];
+    }
+    key = key%97;
+    return key;
+};
 
-int  ins(string entrada, string entradaM,string entradaMo,int entradaYear)
-{
-	unsigned long long Amodular = Numero(entrada, entradaM, entradaMo, entradaYear);
-	int Salida = Amodular%HashMod;
-	return Salida;
-}
+class Auto{
+public:
+    int key;
+    string placa, marca, modelo;
+    string anio;
+        Auto(){
 
+        }
+};
 
-main()
-{
-	string Tabla[97];
-	for(int i = 0; i<97; i++)
-	{
-		Tabla[i]="";
-	}
-			
-	int OpcMen=0;
-	do
-	{
-		cout<<"---Menu hash---\n";
-		cout<<"1. insertar Placa\n";
-		cout<<"2. ver elementos Placa\n";
-		cout<<"Ingrese su opcion:";
-		
-		cin>>OpcMen;
-		
-		if(OpcMen == 1)
-		{
-			string Placa, Marca, Modelo; 
-			int year;
+class MyHashTable{
+    Auto **arr;
+    int size,count;
+public:
+    MyHashTable(int s){
+        count = 0;
+        size = s;
+        arr = new Auto*[size];
+        for (int i = 0; i < size; i++){
+            arr[i]=nullptr;
+        }
+    }
+    
+    int hashIt(int n){
+        return n%size;
+    }
 
-			cout<<"ingrese su Placa: ";
-			cin>>Placa>>Marca>>Modelo>>year;
-			int Pos = ins(Placa, Marca, Modelo, year);
-			cout<<"\nValor hash: "<<Pos<<" "<<Placa<<" "<<Marca<<" "<<Modelo<<" "<<year;
-			if(Tabla[Pos]=="null" || Tabla[Pos]==Placa, Marca, Modelo, year)
-				Tabla[Pos]=Placa, Marca, Modelo, year;
-			else
-				for(int i=Pos;i<HashMod;i++)
-					if(Tabla[i]=="NULL")
-					{
-						Tabla[i]=Placa, Marca, Modelo, year;
-						break;
-					}
-						
-			
-		}
-		
-		if(OpcMen == 2)
-		{
-			for(int i = 0; i<97; i++)
-			{
-				cout<<i<<" "<<Tabla[i]<<"\n";
-			}
-		}
+    void insertItem(int key, string placa, string marca, string modelo, string anio){
+        if(count == size){
+            cout << "tabla llena, imposible insertar" << endl;
+            return;
+        }
+        int hashIndex = hashIt(key);
+        while (arr[hashIndex] != nullptr){
+            hashIndex = (hashIndex + 1) % size;
+        }
+        arr[hashIndex] = new Auto();
+        arr[hashIndex]->key = key;
+        arr[hashIndex]->placa = placa;
+        arr[hashIndex]->marca = marca;
+        arr[hashIndex]->modelo = modelo;
+        arr[hashIndex]->anio = anio;
+        count++;
+    }
 
-	cout<<"\n\n";
-		
-	}while(OpcMen!=0);
-	
-	
+    string getItem(int key){
+        if (count == 0){
+            return "dato no encontrado";
+        }
+        int hashIndex = hashIt(key);
+        int temp = hashIndex;
+        while (true){
+            if (arr[hashIndex] == nullptr){
+                hashIndex = (hashIndex + 1) % size;
+            }else if(arr[hashIndex]->key != key){
+                hashIndex = (hashIndex + 1) % size;
+            }else{
+                break;
+            }
+            if (hashIndex == temp){
+                temp = -1;
+                break;
+            }
+        }
+        if (temp == 1){
+            return "dato no encontrado" ;
+        }else{
+            return arr[hashIndex]->placa + " " + arr[hashIndex]->marca + " "+ arr[hashIndex]->modelo + " "+ arr[hashIndex]->anio ;
+        }
+    }
+
+    void deleteItem(int key){
+        if (count == 0){
+            cout << "dato no encontrado" << endl;
+        }
+        int hashIndex = hashIt(key);
+        int temp = hashIndex;
+        while (true){
+            if (arr[hashIndex] == nullptr){
+                hashIndex = (hashIndex + 1) % size;
+            }else if (arr[hashIndex]->key != key){
+                hashIndex = (hashIndex +1) % size;
+            }else{
+                break;
+            }
+            if (hashIndex == temp){
+                temp = -1;
+                break;
+            }
+        }
+        if (temp == -1){
+            cout << "dato no encontrado" << endl;
+        }else{
+            delete arr[hashIndex];
+            arr[hashIndex] = nullptr;
+            count--;
+        }
+    }
+
+    void displayAll(){
+        for (int i = 0; i < size; i++){
+            if (arr[i] != nullptr){
+                cout << i << " " << arr[i]->placa << " " << arr[i]->marca << " " << arr[i]->modelo << " " << arr[i]->anio <<endl;
+            }else{
+                cout << i << endl;
+            }
+        }
+    }
+    ~MyHashTable(){
+        for (int i = 0; i < size; i++){
+            if (arr[i] != nullptr){
+                delete arr[i];
+                arr[i] = nullptr;
+            }
+        }   
+    }
+};
+
+int main(){
+    MyHashTable mht(97);
+    string placa, marca, modelo, anio, choice;
+    int key, value;
+    while(1){
+        getline(cin, choice);
+        switch(stoi(choice))
+        {
+        case 1:
+            getline(cin, placa);
+            getline(cin, marca);
+            getline(cin, modelo);
+            getline(cin, anio);
+            stoi(anio);
+            key=Hashing(placa);
+            mht.insertItem(key, placa, marca, modelo, anio);
+            break;
+        case 2:
+            getline(cin, placa);
+            key=Hashing(placa);
+            mht.deleteItem(key);
+            break;
+        case 3:
+            mht.displayAll();
+            break;
+        case 4:
+            getline(cin, placa);
+            key=Hashing(placa);
+            cout << mht.getItem(key) << endl;
+            break;
+        case 0:
+            exit(1);
+       }
+    }
 }

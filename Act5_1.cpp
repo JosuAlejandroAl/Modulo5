@@ -1,10 +1,6 @@
 #include <string>
 #include <iostream>
 #include <vector>
-#include <queue>
-#include <list>
-#include <stack>
-#include <map>
 #include <fstream>
 #include <cstdlib>
 #include <sstream>
@@ -12,7 +8,7 @@
 
 using namespace std;
 
-int Hashing(string placa){
+int Hashing(string placa){//Complejidad O(N)
     int key=0;
     for (int i = 0; i < placa.length(); i++){
         key = key + placa[i];
@@ -44,11 +40,11 @@ public:
         }
     }
     
-    int hashIt(int n){
+    int hashIt(int n){//Complejidad O(1)
         return n%size;
     }
 
-    void insertItem(int key, string placa, string marca, string modelo, string anio){
+    void ins(int key, string placa, string marca, string modelo, string anio){//Complejidad O(N)
         if(count == size){
             cout << "tabla llena, imposible insertar" << endl;
             return;
@@ -66,7 +62,7 @@ public:
         count++;
     }
 
-    string getItem(int key){
+    string search(int key){//Complejidad O(1)
         if (count == 0){
             return "dato no encontrado";
         }
@@ -92,7 +88,7 @@ public:
         }
     }
 
-    void deleteItem(int key){
+    void del(int key){//Complejidad O(long N)
         if (count == 0){
             cout << "dato no encontrado" << endl;
         }
@@ -112,7 +108,7 @@ public:
             }
         }
         if (temp == -1){
-            cout << "dato no encontrado" << endl;
+			
         }else{
             delete arr[hashIndex];
             arr[hashIndex] = nullptr;
@@ -120,7 +116,7 @@ public:
         }
     }
 
-    void displayAll(){
+    void print(){//Complejidad O(N)
         for (int i = 0; i < size; i++){
             if (arr[i] != nullptr){
                 cout << i << " " << arr[i]->placa << " " << arr[i]->marca << " " << arr[i]->modelo << " " << arr[i]->anio <<endl;
@@ -129,7 +125,7 @@ public:
             }
         }
     }
-    ~MyHashTable(){
+    ~MyHashTable(){//Complejidad O(N)
         for (int i = 0; i < size; i++){
             if (arr[i] != nullptr){
                 delete arr[i];
@@ -154,20 +150,20 @@ int main(){
             getline(cin, anio);
             stoi(anio);
             key=Hashing(placa);
-            mht.insertItem(key, placa, marca, modelo, anio);
+			mht.ins(key, placa, marca, modelo, anio);
             break;
         case 2:
             getline(cin, placa);
             key=Hashing(placa);
-            mht.deleteItem(key);
+            mht.del(key);
             break;
         case 3:
-            mht.displayAll();
+            mht.print();
             break;
         case 4:
             getline(cin, placa);
             key=Hashing(placa);
-            cout << mht.getItem(key) << endl;
+            cout << mht.search(key) << endl;
             break;
         case 0:
             exit(1);
